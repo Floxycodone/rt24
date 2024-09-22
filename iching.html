@@ -1,0 +1,161 @@
+<html><head><base href="https://i-ging.io">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Ching: Symbolism & Alchemy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background-color: #1a1a1a;
+    color: #d4af37;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('https://i-ging.io/assets/alchemical-bg.svg');
+    background-repeat: repeat;
+  }
+  .container {
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    text-align: center;
+    max-width: 800px;
+    width: 90%;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+  #hexagram-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .hexagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .line {
+    width: 100px;
+    height: 12px;
+    margin: 6px 0;
+    background-color: #d4af37;
+  }
+  .line.broken {
+    width: 80px;
+    background-color: transparent;
+    border-top: 3px solid #d4af37;
+    border-bottom: 3px solid #d4af37;
+  }
+  #oracle-button {
+    background-color: #d4af37;
+    border: none;
+    color: #1a1a1a;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.2rem;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+  }
+  #oracle-button:hover {
+    background-color: #1a1a1a;
+    color: #d4af37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+  #interpretation {
+    margin-top: 2rem;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+  #hexagram-info {
+    margin-top: 2rem;
+    text-align: left;
+  }
+  .symbol {
+    font-size: 2rem;
+    margin-right: 1rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>I Ching: Symbolism & Alchemy</h1>
+    <div id="hexagram-container">
+      <div class="hexagram" id="hexagram"></div>
+    </div>
+    <button id="oracle-button">Consult the Oracle</button>
+    <div id="hexagram-info"></div>
+    <p id="interpretation"></p>
+  </div>
+
+  <script>
+    const hexagrams = [
+      { number: 1, name: "The Creative", chineseName: "乾 (qián)", description: "Heaven above and Heaven below. The creative power of the universe, representing strength and pure yang energy.", symbol: "☰", element: "Metal", jungianArchetype: "The Self" },
+      { number: 2, name: "The Receptive", chineseName: "坤 (kūn)", description: "Earth above and Earth below. The receptive power of the universe, representing devotion and pure yin energy.", symbol: "☷", element: "Earth", jungianArchetype: "The Great Mother" },
+      { number: 3, name: "Difficulty at the Beginning", chineseName: "屯 (zhūn)", description: "Water above, Thunder below. The initial struggles that come with new beginnings.", symbol: "☳☵", element: "Wood", jungianArchetype: "The Hero's Journey" },
+      { number: 4, name: "Youthful Folly", chineseName: "蒙 (méng)", description: "Mountain above, Water below. The need for guidance and education in youth.", symbol: "☵☶", element: "Wood", jungianArchetype: "The Child" },
+      { number: 5, name: "Waiting", chineseName: "需 (xū)", description: "Water above, Heaven below. Patience and timing in face of danger.", symbol: "☰☵", element: "Metal", jungianArchetype: "The Wise Old Man" },
+      { number: 6, name: "Conflict", chineseName: "訟 (sòng)", description: "Heaven above, Water below. Conflict and the need for negotiation.", symbol: "☵☰", element: "Metal", jungianArchetype: "The Shadow" },
+      { number: 7, name: "The Army", chineseName: "師 (shī)", description: "Earth above, Water below. Discipline and leadership in times of struggle.", symbol: "☵☷", element: "Earth", jungianArchetype: "The Warrior" },
+      { number: 8, name: "Holding Together", chineseName: "比 (bǐ)", description: "Water above, Earth below. Unity and social bonds.", symbol: "☷☵", element: "Earth", jungianArchetype: "The Anima/Animus" },
+      // Add more hexagrams here...
+    ];
+
+    function generateHexagram() {
+      const hexagram = document.getElementById('hexagram');
+      hexagram.innerHTML = '';
+      const lines = [];
+      for (let i = 0; i < 6; i++) {
+        const line = document.createElement('div');
+        const isYang = Math.random() < 0.5;
+        line.className = isYang ? 'line' : 'line broken';
+        hexagram.appendChild(line);
+        lines.push(isYang ? 1 : 0);
+      }
+      return lines;
+    }
+
+    function getHexagramIndex(lines) {
+      const binaryString = lines.join('');
+      const decimalValue = parseInt(binaryString, 2);
+      return 63 - decimalValue; // Reverse the index because the I Ching traditionally counts from bottom to top
+    }
+
+    function consultOracle() {
+      const lines = generateHexagram();
+      const hexagramIndex = getHexagramIndex(lines);
+      const hexagram = hexagrams[hexagramIndex];
+
+      const hexagramInfo = document.getElementById('hexagram-info');
+      const interpretation = document.getElementById('interpretation');
+
+      hexagramInfo.innerHTML = `
+        <h2><span class="symbol">${hexagram.symbol}</span> ${hexagram.number}. ${hexagram.name} (${hexagram.chineseName})</h2>
+        <p><strong>Element:</strong> ${hexagram.element}</p>
+        <p><strong>Jungian Archetype:</strong> ${hexagram.jungianArchetype}</p>
+        <p>${hexagram.description}</p>
+      `;
+
+      interpretation.textContent = `Reflect on the symbolism of ${hexagram.name} and its connection to ${hexagram.jungianArchetype}. How does this relate to your current situation or question?`;
+    }
+
+    document.getElementById('oracle-button').addEventListener('click', consultOracle);
+
+    // Initial oracle consultation
+    consultOracle();
+  </script>
+</body></html>
